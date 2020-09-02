@@ -128,6 +128,11 @@ so it is not slowing down Godot execution."
   :type 'boolean
   :group 'gdscript)
 
+(defcustom gdscript-elint-command "./makem.sh lint-compile"
+  "The command to run linter checks for gdscript elisp library"
+  :type 'string
+  :group 'gdscript)
+
 (defcustom gdscript-docs-force-online-lookup nil
   "If true, calling commands like gdscript-docs-browse-api browses the online API reference, even if a local copy is available."
   :type 'boolean
