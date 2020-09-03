@@ -63,7 +63,7 @@ and let user choose one prompting with optional PROMPT."
 
 (defun gdscript-project--select-script ()
   "Find all scripts in the project directories and select one."
-  (gdscript-project--select-file "^[[:alnum:]].*\\.\\(gd\\|cs\\)\\'" "Select gdscript:" ))
+  (gdscript-project--select-file "^[[:alnum:]].*\\.\\(gd\\|cs\\)\\'" "Select script:" ))
 
 (defun gdscript-project--current-buffer-script ()
   "Return the name of current script.
