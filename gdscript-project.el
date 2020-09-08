@@ -37,7 +37,6 @@
 
 (defun gdscript-project--current-buffer-scene ()
   "Return the name of current scene.
-
 If current buffer is not visiting scene file return nil."
   (when buffer-file-name
     (let ((scene-name (concat
@@ -45,13 +44,26 @@ If current buffer is not visiting scene file return nil."
                        (gdscript-util--get-godot-project-file-path-relative buffer-file-name) ".tscn")))
       (when (file-exists-p scene-name) scene-name))))
 
+(defun gdscript-project--find-files-recursively (regexp)
+  "return a relative list of files matching regular expression REGEXP(info node `(elisp) Regular Expressions')."
+  (let* ((r (gdscript-util--find-project-configuration-file))
+         (file-list (mapcar (lambda (x) (file-relative-name x r)) (directory-files-recursively r regexp))))
+    file-list))
+
+
+(defun gdscript-project--select-file (regexp &optional prompt)
+  "Find all files matching REGEXP (info node `(elisp) Regular Expressions') in the project hierarchy
+and let user choose one prompting with optional PROMPT."
+  (let* ((file-list (gdscript-project--find-files-recursively regexp)))
+    (gdscript-util--read file-list (or prompt "Select file:"))))
+
 (defun gdscript-project--select-scene ()
-  "Find all scenes files and let user choose one."
-  (message "selecting scene")
-  (let* ((rl (gdscript-util--find-project-configuration-file))
-         (scene-list (mapcar (lambda (x) (file-relative-name x rl)) (directory-files-recursively rl ".*.tscn" t)))
-         (prompt "Select scene to run" ))
-    (gdscript-util--read scene-list prompt)))
+  "Find all scenes in the project directories and select one."
+  (gdscript-project--select-file "^[[:alnum:]].*\\.tscn\\'" "Select scene:" ))
+
+(defun gdscript-project--select-script ()
+  "Find all scripts in the project directories and select one."
+  (gdscript-project--select-file "^[[:alnum:]].*\\.\\(gd\\|cs\\)\\'" "Select script:" ))
 
 (defun gdscript-project--current-buffer-script ()
   "Return the name of current script.
