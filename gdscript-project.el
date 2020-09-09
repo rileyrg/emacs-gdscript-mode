@@ -58,7 +58,7 @@ and let user choose one prompting with optional PROMPT."
     (gdscript-util--read file-list (or prompt "Select file:"))))
 
 (defun gdscript-project--select-scene ()
-  "Find all scenes in the project directories and select one."
+  "Find all scenes files and let user choose one. Return `nil' if user cancels selection."
   (gdscript-project--select-file "^[[:alnum:]].*\\.tscn\\'" "Select scene:" ))
 
 (defun gdscript-project--select-script ()
@@ -82,7 +82,7 @@ If current buffer is not visiting script file return nil."
     (unwind-protect
         (let* ((prompt (format "Buffer %s is not script file, select script to run" (buffer-name)))
                (script-name (gdscript-util--read gdscript-project--script-list prompt)))
-          (gdscript-godot--run-script script-name))
+          (when script-name (gdscript-godot--run-script script-name)))
       (when hydra-open (gdscript-hydra--menu/body)))))
 
 (defun gdscript-project--ag-cleanup ()
